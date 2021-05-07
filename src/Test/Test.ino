@@ -17,7 +17,7 @@
   * 1: Basic TFT LCD display - bitmap with text
   * 2. Basic Soil Moisture Data Output test
   * 3: Soil Moisture Parameter Check - dry soil
-  * 4: Soil moisture Parameter Check - after watering
+  * 4: Light Intensity Test
   * 5: Plant Food Pump Test - With button
   * 6. Plant Food Pump Test - Without button
   * 
@@ -203,9 +203,12 @@ int moisturePin = A1;
 
 int motorPin = 2;
 
+int lightPin = A0;
+int lightValue = -1;
+
 TFT screen = TFT(CS, DC, RESET);
 
-int testCode = -1;
+int testCode;
 
 void setup() 
 {
@@ -216,6 +219,7 @@ void setup()
   screen.background(0,0,0);
 
   pinMode(moisturePin, INPUT);
+  pinMode(lightPin, INPUT);
   pinMode(motorPin, OUTPUT);
   
   delay(1000);
@@ -226,11 +230,8 @@ void loop()
   if(Serial.available() > 0)
   {
     testCode = Serial.read();
-  }
-
-  Serial.println("The test code received was: " + testCode);
-
-  switch(testCode)
+    Serial.println("The test code received was: " + testCode);
+      switch(testCode)
   {
     case 1: //Basic TFT LCD Display
       screen.drawBitmap(0,0,Mandrake, 128, 160, 0xFFFF);
@@ -270,6 +271,7 @@ void loop()
       delay(30);
       break;
     case 4:
+      
       break;
     case 5: //Plant Food Pump test without button
       digitalWrite(motorPin, HIGH);
@@ -282,4 +284,7 @@ void loop()
       Serial.println("Test code not recognised.");
       break;
   }
+  }
+
+
 }
