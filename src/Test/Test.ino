@@ -230,9 +230,10 @@ void loop()
   if(Serial.available() > 0)
   {
     testCode = Serial.read();
-    Serial.println("The test code received was: " + testCode);
-      switch(testCode)
-  {
+    Serial.println("The test code received was: ");
+    Serial.println(testCode, DEC);
+    switch(testCode)
+    {
     case 1: //Basic TFT LCD Display
       screen.drawBitmap(0,0,Mandrake, 128, 160, 0xFFFF);
       delay(10000);
@@ -242,7 +243,7 @@ void loop()
       screen.text(happiness, 1, 27);
       break;
       
-    case 2: //Basic Soil Moisture Data Output
+    case '2': //Basic Soil Moisture Data Output
       for (int i = 0; i <= 100; i++) 
       { 
         moistureLevel = moistureLevel + analogRead(moisturePin); 
