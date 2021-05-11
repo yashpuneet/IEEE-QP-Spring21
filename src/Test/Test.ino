@@ -234,7 +234,7 @@ void loop()
     Serial.println(testCode, DEC);
     switch(testCode)
     {
-    case 1: //Basic TFT LCD Display
+    case '1': //Basic TFT LCD Display
       screen.drawBitmap(0,0,Mandrake, 128, 160, 0xFFFF);
       delay(10000);
       screen.stroke(0,0,0);
@@ -254,14 +254,14 @@ void loop()
       delay(30);
       break;
       
-    case 3: //Soil Moisture Parameter Check
+    case '3': //Soil Moisture Parameter Check
       for (int i = 0; i <= 100; i++) 
       { 
         moistureLevel = moistureLevel + analogRead(moisturePin); 
         delay(1); 
       } 
       moistureLevel = moistureLevel/100.0; 
-      if(moistureLevel < 500)
+      if(moistureLevel < 650)
       {
         Serial.println("Dry");
       }
@@ -271,15 +271,15 @@ void loop()
       }
       delay(30);
       break;
-    case 4:
+    case '4':
       
       break;
-    case 5: //Plant Food Pump test without button
+    case '5': //Plant Food Pump test without button
       digitalWrite(motorPin, HIGH);
       delay(1000);
       digitalWrite(motorPin, LOW);
       break;
-    case 6: //Plant Food Pump test with button
+    case '6': //Plant Food Pump test with button
       break;
     default:
       Serial.println("Test code not recognised.");
