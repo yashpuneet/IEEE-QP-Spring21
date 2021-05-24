@@ -1,29 +1,14 @@
-from serial import Serial
-from tkinter import *
+#from serial import Serial
 import pygame
+#import sys
 import time
 
 pygame.init()
 pygame.mixer.init()
 
-bgm = "BackgroundMusic.mp3"
+bgm = "bgm.mp3"
 bgmusic = pygame.mixer.music.load(bgm)
 pygame.mixer.music.play(-1)
-
-baud_rate = 9600
-port = 'COM5' #May need to be changed when using Bluetooth
-
-#conn = Serial(port, baud_rate, timeout=1)
-
-#conn.write("t")
-#moistureThreshold = conn.readline()
-
-#conn.write("i")
-#lightThreshold = conn.readline()
-
-potters = Tk()
-potters.title("The Potters")
-potters.attributes('-fullscreen', True)
 
 healthVal = 100
 health = "Health: " + str(healthVal) + "%"
@@ -34,81 +19,83 @@ level = "Level: " + str(levelVal)
 happinessVal = 2
 happiness = "Happiness: " + str(happinessVal)
 
-recommendation = "Ask Above! Give me what I need :("
+foodCount = 0
+food = "Feeds: " + str(foodCount)
+
+helpCount = 0
+helpStr = "Recommendations: " + str(helpCount)
+
+#recommendation = "Ask Above! Give me what I need :("
 
 #conn.write("u")
-username = "The Potters - Will Read from Pot" #replace with conn.readline()
+#username = "The Potters - Will Read from Pot" #replace with conn.readline()
 
-friendName = ""
+potters = pygame.display.set_mode((1000, 600))
 
-def Close():
-    potters.destroy()
+clockRate = 60
+clock = pygame.time.Clock()
 
-def Moisture():
-    print("moisture") #Delete
-    #conn.write("m")
-    #moisture = conn.readline()
+bg = pygame.image.load("GreatHall.png")
+sprite = pygame.image.load("plant.png")
 
-def Light():
-    print("light") #Delete
-    #conn.write("l")
-    #light = conn.readline()
+x, y = potters.get_size()
+bg = pygame.transform.scale(bg, [x, y])
 
-def Feed():
-    print("feed") #Delete
-    #conn.write("f")
+pygame.display.set_caption('The Potters')
 
-def Recommend():
-    print("recommend") #Delete
-    #conn.write("m")
-    #moisture = conn.readline()
-    #time.sleep(1)
-    #conn.write("l")
-    #light = conn.readline()
-    #time.sleep(1)
-    #if(moisture < moistureThreshold)
+potters.blit(bg, [0, 0])
 
-def MakeFriend():
-    print("Make Friend")
-    #conn.write("s")
+def drawPlant(w, h):
+    potters.blit(bg, [0, 0])
+    potters.blit(sprite, [w, h])
 
-bg = PhotoImage(file = "GreatHall.png") 
-bglabel = Label(potters, image=bg)
-bglabel.place(x=0, y=0, relwidth=1, relheight=1)
+def writeText(text, size, x, y):
+    font = pygame.font.SysFont('arial', size)
+    words = font.render(text, True, (0,0,0))
+    potters.blit(words, [x, y])
+    
 
-usernameLabel = Label(potters, text = username, font = ("Arial", 14))
-usernameLabel.place(relx = 0.1, rely = 0.05, width = 400)
+running = True
 
-plant = PhotoImage(file = "Mandrake.png") #Will change to read from Pot
-plantlabel = Label(potters, image=plant)
-plantlabel.place(relx = 0.1, rely = 0.1, width=400, height=494)
+w = 100
+w_change = 0
 
-exit = Button(potters, text="Exit", command=Close)
-exit.place(relx=0.45, rely=0.9, relwidth=0.1, relheight=0.05)
+h = 360
 
-levelLabel = Label(potters, text = level, font=("Arial", 18))
-levelLabel.place(relx=0.4, rely = 0.1, relwidth = 0.4)
+while running:
 
-healthLabel = Label(potters, text = health, font=("Arial", 18))
-healthLabel.place(relx=0.4, rely = 0.2, relwidth = 0.4)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            quit()
+            
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                w_change = -5
+            elif event.key == pygame.K_RIGHT:
+                w_change = 5
 
-happinessLabel = Label(potters, text = happiness, font=("Arial", 18))
-happinessLabel.place(relx=0.4, rely = 0.3, relwidth = 0.4)
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                w_change = 0
 
-feed = Button(potters, text="Feed", font = ("Arial", 14), command=Feed)
-feed.place(relx = 0.45, rely = 0.4, relwidth = 0.1)
+    if w > x - 150:
+        w = 0
 
-recommend = Button(potters, text="Ask", font=("Arial", 14), command=Recommend)
-recommend.place(relx = 0.65, rely = 0.4, relwidth=0.1)
+    if w < 0:
+        w = x - 150
+    
+    w = w + w_change
+    drawPlant(w, h)
+    writeText(health, 20, 800, 15)
+    writeText(level, 20, 800, 45)
+    writeText(happiness, 20, 800, 75)
+    writeText(food, 20, 15, 45)
+    writeText(helpStr, 20, 15, 15)
+    
+    pygame.display.update()
+    clock.tick(60)
 
-recommendationLabel = Label(potters, text=recommendation, font=("Arial", 14))
-recommendationLabel.place(relx = 0.4, rely = 0.5, relwidth = 0.4)
 
-makeFriend = Button(potters, text="Make a Friend!", font=("Arial", 14), command=MakeFriend)
-makeFriend.place(relx = 0.5, rely = 0.6, relwidth = 0.2)
 
-bglabel.pack()
 
-#conn.close()
-
-potters.mainloop()
